@@ -1,0 +1,88 @@
+## Docker Threat Modeling
+
+1. Container Image Vulnerabilities
+
+- Description: Vulnerabilities in the base images or third-party libraries can be exploited.
+- STRIDE Pillar: Tampering, Information Disclosure
+- Details: Attackers may tamper with images or exploit vulnerabilities to gain unauthorized access, leading to information disclosure.
+
+2. Docker Daemon API Exposure
+
+- Description: The Docker daemon API can be accessed remotely if not secured properly.
+- STRIDE Pillar: Spoofing, Elevation of Privilege
+- Details: An attacker could spoof legitimate requests to the Docker daemon to gain elevated privileges.
+
+3. Insecure Networking Between Containers
+
+- Description: Poorly configured network settings may allow unauthorized access between containers.
+- STRIDE Pillar: Information Disclosure, Denial of Service
+- Details: Sensitive data can be intercepted during container communication, or an attacker can disrupt services.
+
+4. Misconfigured Docker Volumes
+
+- Description: Improper permissions on mounted volumes can lead to data exposure.
+- STRIDE Pillar: Information Disclosure, Tampering
+- Details: Unauthorized access to sensitive data stored in volumes may occur, allowing attackers to tamper with the data.
+
+5. Container Escape Vulnerabilities
+
+- Description: Flaws that allow attackers to escape the container and gain access to the host system.
+- STRIDE Pillar: Elevation of Privilege
+- Details: An attacker could exploit these vulnerabilities to escalate privileges and compromise the host.
+
+
+## Kubernetes Threat Modeling
+
+1. API Server Authentication Flaws
+
+- Description: Weak authentication mechanisms in the API server can be exploited.
+- STRIDE Pillar: Spoofing, Elevation of Privilege
+- Details: Attackers could impersonate legitimate users to gain unauthorized access to the control plane.
+
+2. etcd Data Storage Vulnerabilities
+
+- Description: Sensitive configuration data is stored in etcd, which can be improperly secured.
+- STRIDE Pillar: Information Disclosure, Tampering
+- Details: An attacker could access or modify sensitive data stored in etcd, compromising cluster integrity.
+
+3. Network Policies Misconfiguration
+
+- Description: Improperly configured network policies may allow unauthorized traffic.
+- STRIDE Pillar: Information Disclosure, Denial of Service
+- Details: Sensitive services may be exposed, allowing attackers to intercept data or launch denial of service attacks.
+
+4. RBAC Misconfigurations
+
+- Description: Incorrectly defined Role-Based Access Control (RBAC) policies can lead to excessive permissions.
+- STRIDE Pillar: Elevation of Privilege, Repudiation
+- Details: Users may gain unauthorized access to resources, and actions may be repudiated due to lack of proper logging.
+
+5. Pod Security Policy Violations
+
+- Description: Weak Pod Security Policies may allow the deployment of insecure containers.
+- STRIDE Pillar: Tampering, Denial of Service
+- Details: Attackers can deploy malicious containers that disrupt services or tamper with existing workloads.
+
+
+## Docker-bench Run Results and Analysis
+
+[FAIL] 2.16 Ensure Userland Proxy is Disabled (Scored) 
+
+Reason: The Docker daemon starts a userland proxy service for port forwarding whenever a port is 
+exposed. Where hairpin NAT is available, this service is generally superfluous to 
+requirements and can be disabled
+Fix: You should run the Docker daemon as below: 
+dockerd --userland-proxy=false 
+
+[FAIL] 3.17 Ensure that the daemon.json file ownership is set to root:root (Scored)
+
+Reason: The daemon.json file contains sensitive parameters that could alter the behavior of the docker daemon. It should therefore be owned and group owned by root to ensure it can not be modified by less privileged users.
+Fix: chown root:root /etc/docker/daemon.json
+
+[FAIL] 4.5 Ensure Content trust for Docker is Enabled (Scored)
+
+Reason: Content trust provides the ability to use digital signatures for data sent to and received 
+from remote Docker registries. These signatures allow client-side verification of the 
+identity and the publisher of specific image tags and ensures the provenance of container 
+images.
+Fix: export DOCKER_CONTENT_TRUST=1 
