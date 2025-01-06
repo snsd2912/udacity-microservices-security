@@ -1,0 +1,7 @@
+prometheus:
+  scrapeInterval: 15s
+  evaluationInterval: 15s
+  prometheusSpec:
+    scrapeConfigSelector:
+      matchLabels:
+        release: kube-prometheus-stack-65.5.1

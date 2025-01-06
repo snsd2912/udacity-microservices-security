@@ -1,0 +1,11 @@
+1. How will you test the changes?
+
+To effectively test changes, I will leverage a multi-tiered approach that includes both automated and manual testing techniques. I will utilize a staging environment that closely mirrors the production cluster in terms of configuration, workloads, and resource limits. Automated tests, including unit and integration tests, will be executed to validate that all services function correctly after implementing the hardening changes. Additionally, I will employ tools like kube-bench to assess the compliance of the cluster against the CIS Kubernetes Benchmark and identify any potential security gaps.
+
+Following automated testing, I will conduct manual tests, focusing on critical functionalities and user workflows. This will involve executing common Kubernetes operations such as deploying applications, scaling pods, and performing updates to ensure that these operations remain unaffected.
+
+2. How will you ensure the changes don't negatively affect your cluster?
+
+To ensure that the changes do not negatively impact the cluster, I will implement a monitoring and rollback strategy. I will set up monitoring solutions, such as Prometheus and Grafana, to track key performance indicators (KPIs) like resource utilization, pod health, and API response times. Establishing alert thresholds will enable the immediate identification of anomalies resulting from the hardening changes.
+
+Moreover, I will utilize a blue-green deployment strategy or canary releases, allowing me to gradually introduce the hardening changes to a subset of the production environment. This phased approach minimizes the risk of widespread disruption, enabling the team to monitor the performance and quickly revert changes if any issues arise.
